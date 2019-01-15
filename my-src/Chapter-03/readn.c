@@ -1,6 +1,6 @@
 #include "unp.h"
 
-// 往一个fd中读n个字节，返回实际读取的字节数
+// 从一个fd中读n个字节，返回实际读取的字节数
 ssize_t
 read_n(int fd, void *vptr, size_t n)
 {
