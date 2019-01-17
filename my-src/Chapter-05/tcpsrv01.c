@@ -26,7 +26,7 @@ main(int argc, char **argv)
         connfd = accept(listenfd, (SA *)&cli_addr, &cli_len);
         if ((child_pid = Fork()) == 0) {
             Close(listenfd);
-            // 处理与客户端是交互
+            // 处理与客户端的交互
             str_echo(connfd);
             exit(0);
         }
