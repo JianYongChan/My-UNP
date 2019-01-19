@@ -19,6 +19,9 @@ srv02: tcpsrv02.o $(srv_objects)
 srv04: tcpsrv04.o $(srv_objects)
 	cc -o srv04 tcpsrv04.o $(srv_objects) -lunp
 
+srv05: tcpsrv04.o str_echo2.o sigchld.o
+	cc -o srv05 tcpsrv04.o str_echo2.o sigchld.o -lunp
+
 str_cli.o: str_cli.c
 	cc -c str_cli.c
 
@@ -32,6 +35,9 @@ tcpcli04.o: tcpcli04.c str_cli.c
 str_echo.o: str_echo.c
 	cc -c str_echo.c
 
+str_echo2.o: str_echo2.c
+	cc -c str_echo2.c
+
 sigchld.o: sigchld.c
 	cc -c sigchld.c
 
@@ -43,6 +49,7 @@ tcpsrv02.o: tcpsrv02.c str_echo.c sigchld.c
 
 tcpsrv04.o: tcpsrv04.c str_echo.c sigchld.c
 	cc -c tcpsrv04.c
+
 
 # .PHONY表示clean是一个伪目标
 .PHONY: clean
