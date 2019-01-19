@@ -1,4 +1,4 @@
-cli_objects = str_cli.o readline.o
+cli_objects = str_cli.o
 
 srv_objects = str_echo.o sigchld.o
 
@@ -22,13 +22,10 @@ srv04: tcpsrv04.o $(srv_objects)
 str_cli.o: str_cli.c
 	cc -c str_cli.c
 
-readline.o: readline.c
-	cc -c readline.c
-
-tcpcli01.o: tcpcli01.c str_cli.c readline.c
+tcpcli01.o: tcpcli01.c str_cli.c
 	cc -c tcpcli01.c
 
-tcpcli04.o: tcpcli04.c str_cli.c readline.c
+tcpcli04.o: tcpcli04.c str_cli.c
 	cc -c tcpcli04.c
 
 
@@ -47,6 +44,8 @@ tcpsrv02.o: tcpsrv02.c str_echo.c sigchld.c
 tcpsrv04.o: tcpsrv04.c str_echo.c sigchld.c
 	cc -c tcpsrv04.c
 
+# .PHONY表示clean是一个伪目标
+.PHONY: clean
 # rm前的-表示某些文件删除时出错就忽略
 clean:
 	-rm $(cli_objects) $(srv_objects) $(exe_objects)
