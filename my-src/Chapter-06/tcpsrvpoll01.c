@@ -44,7 +44,7 @@ main(int argc, char **argv)
                 // 找到第一个可存放客户的空位
                 if (client[i].fd < 0) {
                     client[i].fd = connfd;
-                    client[i].events = POLLRDNORM;  // 书上少了这一句
+                    client[i].events = POLLRDNORM;  // 书上这一句在`if (i > maxi)`之前
                     break;
                 }
             }
