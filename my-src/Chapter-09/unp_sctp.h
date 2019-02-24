@@ -32,7 +32,7 @@ typedef struct sockaddr SA;
 
 sctp_assoc_t sctp_address_to_associd(int sockfd, struct sockaddr *sa, socklen_t salen);
 
-int sctp_get_no_strms(int sockfd, struct sockaddr *to, socklen_t tolen);
+int sctp_get_no_strms(int sockfd, struct sctp_sndrcvinfo *srip);
 
 void sctp_str_cli(FILE *fp, int sockfd, SA *to, socklen_t tolen);
 void sctp_str_cli_echoall(FILE *fp, int sockfd, SA *to, socklen_t tolen);
