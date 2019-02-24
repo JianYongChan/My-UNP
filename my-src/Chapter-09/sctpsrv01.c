@@ -49,13 +49,14 @@ main(int argc, char **argv)
         len = sizeof(cli_addr);
         rd_sz = sctp_recvmsg(sockfd, readbuf, sizeof(readbuf),
                 (struct sockaddr *)&cli_addr, &len, &sri, &msg_flags);
+        printf("rd_sz = %ld\n", rd_sz);
         if (rd_sz < 0) {
             perror("sctp_recvmsg error");
             return -1;
         }
         if (stream_increment) {
             sri.sinfo_stream++;
-            strms = sctp_get_no_strms(sockfd, (SA *)&cli_addr, len);
+            strms = sctp_get_no_strms(sockfd, &sri);
             if (strms < 0) {
                 perror("sctp_get_no_strms error");
                 return -1;
