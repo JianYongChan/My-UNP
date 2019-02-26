@@ -31,7 +31,9 @@ sctp_str_cli(FILE *fp, int sockfd, SA *to, socklen_t tolen)
             perror("sctp_recvmsg error");
             return;
         }
-        printf("From str:%d seq:%d (assoc:0x%x): %s",
-                sri.sinfo_stream, sri.sinfo_ssn, (unsigned int)sri.sinfo_assoc_id, recvline);
+
+        printf("From str:%d seq:%d (assoc:0x%x):",
+                sri.sinfo_stream, sri.sinfo_ssn, (unsigned int)sri.sinfo_assoc_id);
+        printf("%*.s", rd_sz, recvline);
     }
 }
