@@ -15,7 +15,7 @@ main(int argc, char **argv)
     else if (argc == 3)
         listenfd = Tcp_listen(argv[1], argv[2], NULL);
     else
-        err_quit("usage: %s [ <host> ] <port#>");
+        err_quit("usage: %s [ <host> ] <port#>", argv[0]);
 
     connfd = Accept(listenfd, NULL, NULL);
 
