@@ -51,7 +51,6 @@ main(int argc, char **argv)
     }
     for ( ; ; ) {
         len = sizeof(cli_addr);
-        printf("sockfd = %d\n", sockfd);
         do {
             rd_sz = sctp_recvmsg(sockfd, recvline, sizeof(recvline), (SA *)&cli_addr, &len, &sri, &msg_flags);
         } while (rd_sz < 0 && errno == EAGAIN);

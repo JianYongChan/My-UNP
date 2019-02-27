@@ -28,11 +28,12 @@ sctp_str_cli_echoall(FILE *fp, int sockfd, SA *to, socklen_t tolen)
         }
         for (i = 0; i < SRV_MAX_SCTP_STRM; i++) {
             len = sizeof(perr_addr);
-            rd_sz = sctp_recvmsg(sockfd, recvmsg, MAXLINE, (SA *)&perr_addr, &len, &sri, &msg_flags);
+            rd_sz = sctp_recvmsg(sockfd, recvline, MAXLINE, (SA *)&perr_addr, &len, &sri, &msg_flags);
             if (rd_sz < 0) {
                 perror("sctp_recvmsg error");
                 return;
             }
+            recvline[rd_sz-1] = 0;
             printf("From str:%d seq:%d (assoc:0x%x):",
                     sri.sinfo_stream, sri.sinfo_ssn,
                     (unsigned int)sri.sinfo_assoc_id);
@@ -40,4 +41,3 @@ sctp_str_cli_echoall(FILE *fp, int sockfd, SA *to, socklen_t tolen)
         }
     }
 }
-

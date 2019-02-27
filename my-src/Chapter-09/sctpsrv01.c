@@ -19,7 +19,8 @@ main(int argc, char **argv)
     if (argc == 2)
         stream_increment = atoi(argv[1]);
 
-    if ((sockfd = socket(AF_INET, SOCK_SEQPACKET, IPPROTO_SCTP)) < 0) {
+    sockfd = socket(AF_INET, SOCK_SEQPACKET, IPPROTO_SCTP);
+    if (sockfd < 0) {
         perror("socket error");
         return -1;
     }
@@ -47,38 +48,18 @@ main(int argc, char **argv)
     }
     for ( ; ; ) {
         len = sizeof(struct sockaddr_in);
-        rd_sz = sctp_recvmsg(sockfd, readbuf, sizeof(readbuf),
-                (struct sockaddr *)&cli_addr, &len, &sri, &msg_flags);
-        if (rd_sz < 0) {
-            perror("sctp_recvmsg errorrrrr");
-            return -1;
-        }
-#if 0
-        printf("msg_flags: %d\n", msg_flags);
-        if (msg_flags & MSG_NOTIFICATION) {
-            printf("flags: MSG_NOTIFICATION\n");
-        }
-        if (msg_flags & MSG_EOR) {
-            printf("flags: MSG_EOR\n");
-        }
-        printf("assoc_id: %d\n", sri.sinfo_assoc_id);
-        printf("context: %d\n", sri.sinfo_context);
-        printf("cumtsn: %d\n", sri.sinfo_cumtsn);
-        printf("flags: %d\n", sri.sinfo_flags);
-        printf("ppid: %d\n", sri.sinfo_ppid);
-        printf("ssn: %d\n", sri.sinfo_ssn);
-        printf("stream: %d\n", sri.sinfo_stream);
-        printf("timetolive: %d\n", sri.sinfo_timetolive);
-        printf("tsn: %d\n", sri.sinfo_tsn);
-        printf("rd_sz = %ld\n", rd_sz);
-        printf("rd_sz: %d\n", rd_sz);
-#endif
-        printf("rd_sz < 0: %s\n", (rd_sz < 0) ? "yes" : "no");
-        if ((int)rd_sz < 0) {
-            printf("rd_sz < 0\n");
-            fflush(stdout);
-            return -1;
-        }
+        do {
+            rd_sz = sctp_recvmsg(sockfd, readbuf, sizeof(readbuf),
+                    (struct sockaddr *)&cli_addr, &len, &sri, &msg_flags);
+            printf("rd_sz = %d\n", rd_sz);
+            if (rd_sz < 0) {
+                perror("sctp_recvmsg error");
+                return -1;
+            }
+            if ((msg_flags & MSG_NOTIFICATION) != 0) {
+                printf("MSG_NOTIFICATION\n");
+            }
+        } while ((msg_flags & MSG_NOTIFICATION) != 0);
 
         if (stream_increment) {
             sri.sinfo_stream++;

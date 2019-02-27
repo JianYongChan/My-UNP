@@ -1,4 +1,6 @@
-#include "unp_sctp.h"
+#include "../unp_sctp.h"
+
+extern void check_notification(int sockfd, char *recvline, int rd_len);
 
 void
 sctp_str_cli(FILE *fp, int sockfd, SA *to, socklen_t tolen)
@@ -25,15 +27,17 @@ sctp_str_cli(FILE *fp, int sockfd, SA *to, socklen_t tolen)
             perror("sctp_sendmsg error");
             return;
         }
-        len = sizeof(peer_addr);
-        rd_sz = sctp_recvmsg(sockfd, recvline, MAXLINE, (SA *)&peer_addr, &len, &sri, &msg_flags);
-        if (rd_sz < 0) {
-            perror("sctp_recvmsg error");
-            return;
-        }
 
-        printf("From str:%d seq:%d (assoc:0x%x):",
-                sri.sinfo_stream, sri.sinfo_ssn, (unsigned int)sri.sinfo_assoc_id);
-        printf("%*.s", rd_sz, recvline);
+        do {
+            len = sizeof(peer_addr);
+            rd_sz = sctp_recvmsg(sockfd, recvline, MAXLINE, (SA *)&peer_addr, &len, &sri, &msg_flags);
+            if (rd_sz < 0) {
+                perror("sctp_recvmsg error");
+            }
+            if ((msg_flags & MSG_NOTIFICATION) != 0)
+                check_notification(sockfd, recvline, rd_sz);
+        } while ((msg_flags & MSG_NOTIFICATION) != 0);
+        printf("From str:%d seq:%d (assoc:0x%x): %*s\n",
+                sri.sinfo_stream, sri.sinfo_ssn, (unsigned int)sri.sinfo_assoc_id, rd_sz, recvline);
     }
 }
