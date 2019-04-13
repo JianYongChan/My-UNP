@@ -1,6 +1,7 @@
 #include "unp.h"
 
 extern pid_t *pids;
+extern long  *cptr;
 
 pid_t
 child_make(int i, int listenfd, int addrlen)
@@ -28,6 +29,7 @@ child_main(int i, int listenfd, int addrlen)
         clilen = addrlen;
         connfd = Accept(listenfd, cliaddr, &clilen);
 
+        cptr[i]++;
         web_child(connfd);
         Close(connfd);
     }

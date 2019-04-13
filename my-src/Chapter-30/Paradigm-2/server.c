@@ -1,7 +1,8 @@
 #include "unp.h"
 
-static int     nchildren;
-static pid_t  *pids;
+int     nchildren;
+pid_t  *pids;
+long   *cptr;
 
 int
 main(int argc, char **argv)
@@ -10,6 +11,7 @@ main(int argc, char **argv)
     socklen_t   addrlen;
     void        sig_int(int);
     pid_t       child_make(int, int, int);
+    long       *meter(int); // meter the distribution of connection in children
 
     if (argc == 3) {
         listenfd = Tcp_listen(NULL, argv[1], &addrlen);
@@ -24,6 +26,7 @@ main(int argc, char **argv)
     // 指定预先要派生的子进程数目
     nchildren = atoi(argv[argc-1]);
     pids = Calloc(nchildren, sizeof(pid_t));
+    cptr = meter(nchildren);
 
     for (i = 0; i < nchildren; i++) {
         pids[i] = child_make(i, listenfd, addrlen);
@@ -55,6 +58,10 @@ sig_int(int signo)
     }
 
     pr_cpu_time();
+
+    for (int i = 0; i < nchildren; i++) {
+        printf("conns on child-%d: %ld\n", i, cptr[i]);
+    }
 
     exit(0);    // NOTE: 直接退出进程，并不返回
 }
