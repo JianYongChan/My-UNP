@@ -23,9 +23,17 @@ child_main(int i, int listenfd, int addrlen)
     void              web_child(int);
     socklen_t         clilen;
     struct sockaddr  *cliaddr;
+    fd_set            rset;
 
     cliaddr = Malloc(addrlen);
+    FD_ZERO(&rset);
     for ( ;; ) {
+        FD_SET(listenfd, &rset);
+        Select(listenfd+1, &rset, NULL, NULL, NULL);
+        if (FD_ISSET(listenfd, &rset) == 0) {
+            err_quit("listenfd readable");
+        }
+
         clilen = addrlen;
         connfd = Accept(listenfd, cliaddr, &clilen);
 
