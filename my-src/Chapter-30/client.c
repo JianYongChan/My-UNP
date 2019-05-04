@@ -22,8 +22,8 @@ main(int argc, char **argv)
     nbytes = atoi(argv[5]);
     snprintf(request, sizeof(request), "%d\n", nbytes);
 
-    printf("nchildren: %d\tnloops: %d\tnbytes: %d\n",
-            nchildren, nloops, nbytes);
+    printf("nchildren: %d\tnloops: %d\tnbytes: %d\trequest: %s\n",
+            nchildren, nloops, nbytes, request);
 
     for (i = 0; i < nchildren; i++) {
         if ((pid = Fork()) == 0) {  /* child */
@@ -45,7 +45,7 @@ main(int argc, char **argv)
     }
 
     while (wait(NULL) > 0) {
-        ;
+        ;   /* do nothing */
     }
 
     if (errno != ECHILD) {
